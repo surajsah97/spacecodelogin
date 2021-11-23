@@ -69,7 +69,8 @@ passwordInputBox: {
   marginTop: 35
 },
 loginCardGrid: {
-  marginTop: 60
+  marginTop: 60,
+  justifyContent:"center"
 },
   }));
   

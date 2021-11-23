@@ -11,8 +11,10 @@ const CustomPassword = (props) => {
     const {
         name,
         onEnterPress,
+        dataTestid,
         value,
         onChange,
+        inputProps,
         size,
         focus,
         fullWidth,
@@ -33,9 +35,11 @@ const CustomPassword = (props) => {
         <TextField
             variant="outlined"
             error={error}
+            inputProps={inputProps}
             helperText={helperText}
             name={name}
             value={value}
+            data-testid={dataTestid}
             type={showPassword ? 'text' : 'password'}
             onChange={onChange}
             className={size === 'md' ? classes.md : classes.lg}
@@ -45,11 +49,7 @@ const CustomPassword = (props) => {
             style={{ width: width, backgroundColor: bgColor }}
             onFocus={onFocus}
             onBlur={onBlur}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                    onEnterPress();
-                }
-            }}
+            
             inputRef={inputRef}
             InputProps={{
                 endAdornment: (

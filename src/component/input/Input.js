@@ -22,6 +22,7 @@ const CustomInput = (props) => {
         width,
         bgColor,
         inputRef,
+        
         textTransform,
         ref,
         id,
@@ -46,6 +47,7 @@ const CustomInput = (props) => {
             placeholder={placeholder}
             onChange={onChange}
             type={type}
+        
             id={id}
             className={size === 'md' ? classes.md : classes.lg}
             autoComplete="off"
@@ -74,6 +76,7 @@ const CustomInput = (props) => {
             ref={ref}
             disabled={disabled}
             multiline={multiline}
+            
             InputProps={{
                 endAdornment: Icon && (
                     <InputAdornment position="end">

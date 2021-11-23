@@ -12,3 +12,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.grid_container{
+  display: grid;
+  grid-template-areas: 'header' 'main';
+  grid-template-columns: 1fr;
+  grid-template-rows: 3rem 2fr;
+  height: 100%;
+  width: 100%;
+}
+header{
+  grid-area: header;
+  /* background-color: rgb(8, 8, 78); */
+  position: fixed;
+  width: 100vw;
+  height:15vh;
+  
+}
+main{
+  grid-area: main;
+  padding: 1rem;
+  margin-top: 10px;
+  height: 100vh;
+}

@@ -3,7 +3,6 @@ const CustomTypography = (props) => {
   const {
     component,
     color,
-    lineHeight,
     display,
     letterSpacing,
     fontWeight,
@@ -28,7 +27,6 @@ const CustomTypography = (props) => {
     <Typography
       component={component}
       color={color}
-      lineHeight={lineHeight}
       display={display}
       letterSpacing={letterSpacing}
       fontSize={fontSize}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import CONSTANTS from "../../common/constant"
 import {
   
@@ -22,11 +22,15 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
   const classes = useLoginPageStyles();
+   const dispatch = useDispatch()
+  const history = useHistory();
+  
+  const resp = useSelector((state) => state.Signin);
+  // const { loading, error, userInfo } = resp;
+  const { loading, err, userInfo} = resp;
 
   
-
   
-  const [email, setemail] = useState("")
   
 const handleemail=(e)=>{
   setemailerrors(false)
@@ -39,39 +43,41 @@ const handleforget=()=>{
 }
 
  
+// const massage=(err)?err.data.errors.msg:""
 
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const resp = useSelector((state) => state.Signin);
-  // const { loading, error, userInfo } = resp;
-  const { loading, err, userInfo} = resp;
+  
   
   useEffect(() => {
-    if(userInfo!==undefined){
-      if(userInfo.status){
+      if(userInfo){
         // localStorage.setItem('userInfo', JSON.stringify(userInfo));
         // localStorage.setItem('isLoggedIn', true);
         console.log(userInfo);
-        history.push("/home")
-        toast.success("success")
+        history.push(userInfo.pathname)
+        
       }
       
-    }
+    
     if(err){
-      toast.warn("username or passwor incorrect")
+      toast.error(err.data.errors.msg)
+      console.log(err.data.errors);
+      
+    }
+    else{
+      history.push("/login")
     }
 
   },[userInfo,err])
 
 
-  const [change, setchange] = useState(false);
-  const [username, setusername] = useState("");
-  const [password, setpassword] = useState("");
-  const [show_hidepass, setshow_hidepass] = useState(false);
-  const [isForgatPass, setisForgatPass] = useState(false);
-  const [usernameerrors, setusernameerrors] = useState(false);
-  const [passworderrors, setpassworderrors] = useState(false);
-  const [emailerrors, setemailerrors] = useState(false)
+  const [change, setchange] = React.useState(false);
+  const [username, setusername] = React.useState("");
+  const [password, setpassword] = React.useState("");
+  const [email, setemail] = React.useState("")
+  const [show_hidepass, setshow_hidepass] = React.useState(false);
+  const [isForgatPass, setisForgatPass] = React.useState(false);
+  const [usernameerrors, setusernameerrors] = React.useState(false);
+  const [passworderrors, setpassworderrors] = React.useState(false);
+  const [emailerrors, setemailerrors] = React.useState(false)
   // console.log(username);
   const handleChange = (e) => {
     setchange(e.target.checked);
@@ -93,11 +99,19 @@ const handleforget=()=>{
 const handleSubmit=()=>{
   const post = { username, password };
   dispatch(Sendlogin(post));
+  console.log(post)
   setusername("")
   setpassword("")
 }
+const onEnterPress=()=>{
 
+}
 
+const onKeyDown=((e) => {
+  if (e.key === 'Enter') {
+      onEnterPress();
+  }
+})
   const handlelogin = (e) => {
     e.preventDefault();
     handlevalidation()
@@ -111,10 +125,10 @@ const handleSubmit=()=>{
 
   
 
-  const handleusername = (e) => {
+  const handleusername = (event) => {
     setusernameerrors(false)
-    setusername(e.target.value);
-    console.log((e.target.value));
+    setusername(event.target.value);
+    // console.log(e.target.value);
   };
   const handlepassword = (e) => {
     setpassworderrors(false)
@@ -154,7 +168,7 @@ const Submitbutton=(
                 onClick={handleforgotpass}
                 children={"SUBMIT"}
                 fullWidth
-          
+                data-testid={"SubmitButton"}
                 variant={"contained"}
                 color="primary"
                 // Padding={"25px"}
@@ -169,40 +183,48 @@ const Loginbutton=(
   <Grid
       item
       className={classes.loginBtnContainer}
+      
   >
     <CustomButton
                 mt={20}
-                // onClick={handleSubmit(handlelogin)}
+                // onClick={handlelogin}
                 children={loading ? <CircularProgress color="inherit" size={20} /> : "Login"}
                 fullWidth
                 type={"submit"}
+                data-testid="LoginButton"
                 variant={"contained"}
                 color="primary"
                 // Padding={"25px"}
                 bgcolor={"#2A2247"}
+                onKeyDown
+                
               />
               </Grid>
 )
 const forgotpass=(
-  ( <div><Grid className={classes.logoContainer} container direction="row" alignItems="center" justifyContent="center" >
+  ( <div><Grid className={classes.logoContainer} container direction="row" alignItems="center" >
 <Image/></Grid>
 
 {/* <Box  p={10} pb={6} pt={1}> */}
 <Typography variant="h5" color="textSecondary" align="center" className={classes.typographyH6}>Forgot Your Password ?</Typography>
 <Typography variant="subtitle2" color="textSecondary" align="center" className={classes.typographySubtitle}>Don't worry. Recovering the password is easy. Just tell us the email address you have registered with BloodSpace.</Typography>
         {/* </Box> */}
-        <Grid container style={{marginBottom:"50px", marginTop:"10px"}} direction="row"  alignItems="center" className={classes.loginCardGrid} justifyContent="center">
+        <Grid container style={{marginBottom:"50px", marginTop:"10px"}} direction="row"  alignItems="center" className={classes.loginCardGrid} >
 <Grid item>
 
 
 <InputLabel className={classes.inputLabel}>Username</InputLabel>
   <CustomInput
       name="userName"
+      
       value={username}
+      // data-testid={"username"}
+      inputProps={{ "data-testid": "username" }}
       onChange={handleusername}
+      className="input"
       size="md"
       focus={true}
-      error={usernameerrors}
+      error={usernameerrors?true:false}
       helperText={usernameerrors && "*username required"}
   />
 </Grid>
@@ -212,8 +234,10 @@ const forgotpass=(
   <CustomInput
       name="email"
       value={email}
+      // data-testid={"email"}
+      inputProps={{ "data-testid": "email" }}
       onChange={handleemail}
-      error={emailerrors}
+      error={emailerrors?true:false}
       helperText={emailerrors && "*email required"}
       
       size="md"
@@ -239,17 +263,23 @@ const mainpage=( <div>
 <Image/>
 </Grid>  
 <form onSubmit={handlelogin}>
-  <Grid container style={{marginBottom:"50px", marginTop:"50px"}} direction="row" alignItems="center" className={classes.loginCardGrid} justify="center">
+  <Grid container style={{marginBottom:"50px", marginTop:"50px"}} direction="row" alignItems="center" className={classes.loginCardGrid} >
             <Grid item>
 
 <InputLabel className={classes.inputLabel}>Username</InputLabel>
   <CustomInput
       name="userName"
+      // type={"text"}
+      type="text"
       value={username}
+      // data-testid={"usernames"}
+      inputProps={{ "data-testid": "usernames" }}
+
+      label="username"
       onChange={handleusername}
       size="md"
       focus={true}
-      error={usernameerrors}
+      error={usernameerrors?true:false}
       helperText={usernameerrors && "*username required"}
       // error
       // helperText={"username required"}
@@ -261,8 +291,10 @@ const mainpage=( <div>
   <Password
       name="password"
       size="md"
+      // data-testid={"Password"}
+      inputProps={{ "data-testid": "Password" }}
       value={password}
-      error={passworderrors}
+      error={passworderrors?true:false}
       helperText={passworderrors && "*Password required"}
       autoFocus
       onChange={handlepassword}
@@ -273,7 +305,7 @@ const mainpage=( <div>
 <Grid item className={classes.secureLoginContainer} >
   <Grid container direction="row" alignItems="center" spacing={4}>
       <Grid item>
-      <CustomChekbox onChange={handleChange} checked={change} label={"Secure login"} />
+      <CustomChekbox onChange={handleChange} className="suraj" checked={change?true:false} label={"Secure login"} />
       
       </Grid>
       <Grid item>
@@ -301,8 +333,8 @@ const mainpage=( <div>
     <>
     <ReactCardFlip isFlipped={isForgatPass} flipDirection="vertical">
     <Grid container direction="row"  alignItems="center" justifyContent="center">
-
-    
+     
+    {/* <div style={{display:"flaskalignContent:"center"}}>{massage}</div> */}
     <div className={classes.root}>
     
             {mainpage}
@@ -320,7 +352,7 @@ const mainpage=( <div>
 
 <Typography className={classes.copyrightText} variant="body2"  align="center">
 Copyright © 
-                <Link color="inherit" style={{textDecoration:"none", color:"gray"}}  href="https://spacecode.com/">
+                <Link color="inherit" style={{textDecoration:"none", color:"gray"}}  to="https://spacecode.com/">
                 Spacecode Healthcare S.A.
                 </Link>{' '}
                 {new Date().getFullYear()} All rights reserved.

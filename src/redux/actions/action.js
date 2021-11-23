@@ -6,10 +6,10 @@ const config = {
         type: 'Web'
     }
 };
-const Sendlogin = (post) => async (dispatch) => {
+const Sendlogin = (dost) => async (dispatch) => {
     dispatch({ type: CONSTANTS.USER_LOGIN_REQUEST });
     
-    try{const loginRes = await axios.post("login",post,config)
+    try{const loginRes = await axios.post("login",dost,config)
     if(loginRes.data.status===true){
         dispatch({
             type: CONSTANTS.USER_LOGIN_SUCCESS,
